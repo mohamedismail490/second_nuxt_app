@@ -47,7 +47,7 @@ export default {
             title: 'Logged In Successfully!'
           });
           this.$router.push({
-            path: this.$route.query.redirect || '/profile'
+            path: this.$route.query.redirect || '/dashboard'
           });
         })
         // eslint-disable-next-line node/handle-callback-err

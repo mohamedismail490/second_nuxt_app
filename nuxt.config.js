@@ -38,6 +38,7 @@ export default {
     middleware: ["clearValidationErrors"]
   },
 
+
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
     "@/assets/styles/main.css"
@@ -55,6 +56,10 @@ export default {
     "@/plugins/mixin/validation.js",
     {
       src: "@/plugins/mixin/sweetalerts.js",
+      ssr: false
+    },
+    {
+      src: "@/plugins/mixin/notification.js",
       ssr: false
     }
   ],

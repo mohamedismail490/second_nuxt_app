@@ -6,6 +6,7 @@ export default function ({$axios, store}) {
     // if (typeof(error.response.data.errors) === 'undefined'){
     //   store.dispatch("validation/clearErrors");
     // }
+
     return Promise.reject(error);
   });
 

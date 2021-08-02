@@ -20,6 +20,7 @@
     "@nuxtjs/auth-next": "5.0.0-1624817847.21691f1",
     "@nuxtjs/axios": "^5.13.6",
     "core-js": "^3.15.1",
+    "noty": "^3.2.0-beta-deprecated",
     "nuxt": "^2.15.7",
     "sweetalert2": "^11.1.0"
   },
