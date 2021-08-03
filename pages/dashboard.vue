@@ -5,7 +5,7 @@
     <form @submit.prevent="createTopic">
       <div class="form-group">
         <label><b>Title</b></label>
-        <input v-model="form.title" type="text" class="form-control" placeholder="Enter Topic Title">
+        <input v-model="form.title" type="text" class="form-control" placeholder="Enter Topic Title" autofocus>
         <small v-if="errors.title" class="form-text text-danger">{{ errors.title[0] }}</small>
       </div>
       <div class="form-group">
@@ -13,7 +13,7 @@
         <textarea v-model="form.body" rows="7" class="form-control" placeholder="Enter Topic Body"></textarea>
         <small v-if="errors.body" class="form-text text-danger">{{ errors.body[0] }}</small>
       </div>
-      <button type="submit" class="btn btn-primary">Create</button>
+      <button type="submit" class="btn btn-outline-primary">Create</button>
     </form>
   </div>
 </template>
@@ -38,7 +38,7 @@ export default {
       await this.$axios.$post("/topics", this.form)
         .then(res => {
           if (res.status) {
-            this.$router.push('/');
+            this.$router.push('/topics');
             // eslint-disable-next-line no-undef
             Notify('success', res.message);
           } else {

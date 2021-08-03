@@ -7,7 +7,8 @@ const Notify = (nType, nMessage = '') => new Noty({
   type: nType,
   layout: 'topRight',
   text: ((typeof (nMessage) !== 'undefined') && (nMessage !== '')) ? nMessage : (nType === 'success' ? 'Successfully Done!' : 'Something Wrong Happened!'),
-  timeout: 1500
+  timeout: 2500
 }).show();
 
 window.Notify = Notify;
+

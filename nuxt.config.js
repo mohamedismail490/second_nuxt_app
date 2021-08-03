@@ -16,7 +16,9 @@ export default {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css'}
+      { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css'},
+      { rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css'}
+
     ],
     script: [
       {
@@ -37,7 +39,6 @@ export default {
   router: {
     middleware: ["clearValidationErrors"]
   },
-
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [

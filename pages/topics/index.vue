@@ -4,6 +4,14 @@
     <div v-if="topics.length > 0">
       <div v-for="(topic, index) in topics" :key="index" class="bg-light mt-5 mb-5" style="padding: 20px;">
         <h3><nuxt-link :to="{name:'topics-id',params: {id: topic.id}}" style="text-decoration: none;">{{topic.title}}</nuxt-link></h3>
+        <div v-if="authenticated">
+          <div v-if="user.id === topic.user.id">
+            <nuxt-link :to="{name:'topics-edit-id',params: {id: topic.id}}" style="text-decoration: none;">
+              <button class="btn btn-outline-primary fa fa-edit fa-2x pull-right" style="border: none;"></button>
+            </nuxt-link>
+            <button class="btn btn-outline-danger fa fa-trash fa-2x pull-right" style="border: none;" @click="swalDeleteTopic(topic.id)"></button>
+          </div>
+        </div>
         <p class="text-muted" style="font-size: small;">{{topic.created_since}}&nbsp;<strong>By:</strong>&nbsp;{{topic.user.name}}</p>
         <div v-for="(post, key) in topic.posts" :key="key" class="ml-5 content">
           {{post.body}}
@@ -30,7 +38,7 @@
 
 <script>
 export default {
-  async asyncData({$axios}) {
+  async asyncData({$axios,error}) {
     return await $axios.$get("/topics")
       .then(({data,meta}) => {
         return {
@@ -41,10 +49,7 @@ export default {
       })
       // eslint-disable-next-line node/handle-callback-err
       .catch(err => {
-        if (typeof (err.response.data.errors) === 'undefined') {
-          // eslint-disable-next-line no-undef
-          Notify('error');
-        }
+        return error({ statusCode: 404, message: 'The Requested Page is Not Found!' })
       });
   },
   data() {
@@ -68,6 +73,57 @@ export default {
           // eslint-disable-next-line node/handle-callback-err
           .catch(err => {});
       }
+    },
+    swalDeleteTopic(id) {
+      // eslint-disable-next-line no-undef
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, Delete it!'
+      }).then((result) => {
+        if (result.value) {
+          this.deleteTopic(id);
+        }
+      });
+    },
+    async deleteTopic(id) {
+      return await this.$axios.$delete(`/topics/${id}`)
+        .then(res => {
+          if (res.status) {
+            // this.topics = this.topics.filter(topic => {
+            //   return topic.id !== id
+            // });
+            this.$nuxt.refresh()
+            // eslint-disable-next-line no-undef
+            Swal.fire(
+              'Deleted!',
+              res.message,
+              'success'
+            )
+          } else {
+            // eslint-disable-next-line no-undef
+            Swal.fire(
+              'Error!',
+              res.message,
+              'error'
+            )
+          }
+        })
+        .catch(err => {
+          if (typeof (err.response.data.errors) === 'undefined') {
+            this.$router.push('/topics');
+            // eslint-disable-next-line no-undef
+            Swal.fire(
+              'Error!',
+              'Something wrong happened! Please, try again.',
+              'error'
+            )
+          }
+        })
     }
   }
 }
