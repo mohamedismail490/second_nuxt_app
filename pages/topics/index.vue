@@ -6,10 +6,10 @@
         <h3><nuxt-link :to="{name:'topics-id',params: {id: topic.id}}" style="text-decoration: none;">{{topic.title}}</nuxt-link></h3>
         <div v-if="authenticated">
           <div v-if="user.id === topic.user.id">
+            <button class="btn btn-outline-danger fa fa-trash fa-2x pull-right" style="border: none;" @click="swalDeleteTopic(topic.id)"></button>
             <nuxt-link :to="{name:'topics-edit-id',params: {id: topic.id}}" style="text-decoration: none;">
               <button class="btn btn-outline-primary fa fa-edit fa-2x pull-right" style="border: none;"></button>
             </nuxt-link>
-            <button class="btn btn-outline-danger fa fa-trash fa-2x pull-right" style="border: none;" @click="swalDeleteTopic(topic.id)"></button>
           </div>
         </div>
         <p class="text-muted" style="font-size: small;">{{topic.created_since}}&nbsp;<strong>By:</strong>&nbsp;{{topic.user.name}}</p>
@@ -43,7 +43,7 @@ export default {
       .then(({data,meta}) => {
         return {
           topics: data,
-          links:meta.links,
+          links: meta.links,
           meta
         }
       })
