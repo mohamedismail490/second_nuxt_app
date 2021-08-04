@@ -37,7 +37,7 @@ export default {
   },
 
   router: {
-    middleware: ["clearValidationErrors"]
+    middleware: ["clearValidationErrors","setBackRoute"]
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -55,6 +55,7 @@ export default {
     "@/plugins/mixin/user.js",
     "@/plugins/axios.js",
     "@/plugins/mixin/validation.js",
+    "@/plugins/mixin/redirect.js",
     {
       src: "@/plugins/mixin/sweetalerts.js",
       ssr: false

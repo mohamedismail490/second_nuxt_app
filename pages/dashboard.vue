@@ -47,9 +47,11 @@ export default {
           }
         })
         .catch(err => {
-          if (typeof (err.response.data.errors) === 'undefined') {
+          if ((typeof(err.response) !== 'undefined') && (typeof(err.response.data.errors) === 'undefined')){
             // eslint-disable-next-line no-undef
             Notify('error');
+          }else if (typeof(err.response) === 'undefined'){
+            return this.$nuxt.error({statusCode: 503, message: `Service Unavailable (${err.message || 'Network Error'})!!!`});
           }
         })
     }

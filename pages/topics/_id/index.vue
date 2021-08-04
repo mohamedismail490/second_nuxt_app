@@ -50,8 +50,10 @@ export default {
       .then(({data}) => {
         return {topic: data}
       })
-      // eslint-disable-next-line node/handle-callback-err
       .catch(err => {
+        if (typeof(err.response) === 'undefined'){
+          return error({statusCode: 503, message: `Service Unavailable (${err.message || 'Network Error'})!!!`});
+        }
         return error({ statusCode: 404, message: 'The Topic you are Looking for is Not Found!' })
       });
   },
@@ -71,7 +73,6 @@ export default {
       await this.$axios.$post(`/topics/${this.$route.params.id}/posts`, {body: this.body})
         .then(res => {
           if (res.status) {
-            // this.$router.push('/topics');
             this.$nuxt.refresh();
             this.body = '';
             // eslint-disable-next-line no-undef
@@ -82,9 +83,11 @@ export default {
           }
         })
         .catch(err => {
-          if (typeof (err.response.data.errors) === 'undefined') {
+          if ((typeof(err.response) !== 'undefined') && (typeof(err.response.data.errors) === 'undefined')){
             // eslint-disable-next-line no-undef
             Notify('error');
+          }else if (typeof(err.response) === 'undefined'){
+            return this.$nuxt.error({statusCode: 503, message: `Service Unavailable (${err.message || 'Network Error'})!!!`});
           }
         })
     },
@@ -125,14 +128,15 @@ export default {
           }
         })
         .catch(err => {
-          if (typeof (err.response.data.errors) === 'undefined') {
-            this.$router.push('/topics');
+          if ((typeof(err.response) !== 'undefined') && (typeof(err.response.data.errors) === 'undefined')){
             // eslint-disable-next-line no-undef
             Swal.fire(
               'Error!',
               'Something wrong happened! Please, try again.',
               'error'
             )
+          }else if (typeof(err.response) === 'undefined'){
+            return this.$nuxt.error({statusCode: 503, message: `Service Unavailable (${err.message || 'Network Error'})!!!`});
           }
         })
     }

@@ -47,8 +47,10 @@ export default {
           meta
         }
       })
-      // eslint-disable-next-line node/handle-callback-err
       .catch(err => {
+        if (typeof(err.response) === 'undefined'){
+          return error({statusCode: 503, message: `Service Unavailable (${err.message || 'Network Error'})!!!`});
+        }
         return error({ statusCode: 404, message: 'The Requested Page is Not Found!' })
       });
   },
@@ -66,12 +68,14 @@ export default {
       }else {
         return await this.$axios.$get(value)
           .then(({data,meta}) => {
-            // this.topics = [...this.topics, ...data];
             this.topics = data;
             this.links  = meta.links
           })
-          // eslint-disable-next-line node/handle-callback-err
-          .catch(err => {});
+          .catch(err => {
+            if (typeof(err.response) === 'undefined'){
+              return this.$nuxt.error({statusCode: 503, message: `Service Unavailable (${err.message || 'Network Error'})!!!`});
+            }
+          });
       }
     },
     swalDeleteTopic(id) {
@@ -94,9 +98,6 @@ export default {
       return await this.$axios.$delete(`/topics/${id}`)
         .then(res => {
           if (res.status) {
-            // this.topics = this.topics.filter(topic => {
-            //   return topic.id !== id
-            // });
             this.$nuxt.refresh()
             // eslint-disable-next-line no-undef
             Swal.fire(
@@ -114,14 +115,15 @@ export default {
           }
         })
         .catch(err => {
-          if (typeof (err.response.data.errors) === 'undefined') {
-            this.$router.push('/topics');
+          if ((typeof(err.response) !== 'undefined') && (typeof(err.response.data.errors) === 'undefined')){
             // eslint-disable-next-line no-undef
             Swal.fire(
               'Error!',
               'Something wrong happened! Please, try again.',
               'error'
             )
+          }else if (typeof(err.response) === 'undefined'){
+            return this.$nuxt.error({statusCode: 503, message: `Service Unavailable (${err.message || 'Network Error'})!!!`});
           }
         })
     }

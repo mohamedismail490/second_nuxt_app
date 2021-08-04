@@ -22,12 +22,14 @@ export default {
     return /^\d+$/.test(params.id);
   },
   async asyncData({$axios,params,error}) {
-    return await $axios.$get(`/topics/${params.id}`)
+    return await $axios.$get(`/topics/edit/${params.id}`)
       .then(({data}) => {
         return {topic: data}
       })
-      // eslint-disable-next-line node/handle-callback-err
       .catch(err => {
+        if (typeof(err.response) === 'undefined'){
+          return error({ statusCode: 503, message: `Service Unavailable (${err.message || 'Network Error'})!!!`});
+        }
         return error({ statusCode: 404, message: 'The Topic you are Looking for is Not Found!' })
       });
   },
@@ -57,9 +59,11 @@ export default {
           }
         })
         .catch(err => {
-          if (typeof (err.response.data.errors) === 'undefined') {
+          if ((typeof(err.response) !== 'undefined') && (typeof(err.response.data.errors) === 'undefined')){
             // eslint-disable-next-line no-undef
             Notify('error');
+          }else if (typeof(err.response) === 'undefined'){
+            return this.$nuxt.error({statusCode: 503, message: `Service Unavailable (${err.message || 'Network Error'})!!!`});
           }
         })
     }
