@@ -9,7 +9,7 @@
         <small v-if="errors.title" class="form-text text-danger">{{ errors.title[0] }}</small>
       </div>
       <button type="submit" class="btn btn-outline-info">Update</button>
-      <nuxt-link to="/topics" class="btn btn-outline-secondary ">Back to Topics</nuxt-link>
+      <nuxt-link to="/topics" class="btn btn-outline-warning">Back to Topics</nuxt-link>
     </form>
   </div>
 </template>

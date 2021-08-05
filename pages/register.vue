@@ -48,36 +48,47 @@ export default {
   },
   methods: {
     async userRegister() {
-      await this.$axios.$post('auth/register', this.form)
-        .then(() => {
-          this.$auth.loginWith("local", {
-            data: {
-              email: this.form.email,
-              password: this.form.password
-            }
+      if (this.authenticated) {
+        // eslint-disable-next-line no-undef
+        Toast.fire({
+          icon: 'error',
+          title: 'Already Logged in !!!'
+        });
+      }else {
+        await this.$axios.$post('auth/register', this.form)
+          .then(() => {
+            this.$auth.loginWith("local", {
+              data: {
+                email: this.form.email,
+                password: this.form.password
+              }
+            })
+              .then(() => {
+                // eslint-disable-next-line no-undef
+                Toast.fire({
+                  icon: 'success',
+                  title: 'Logged In Successfully!'
+                });
+                this.$router.push({
+                  path: this.backRoute || '/dashboard'
+                });
+              })
           })
-            .then(() => {
+          .catch(err => {
+            if ((typeof (err.response) !== 'undefined') && (typeof (err.response.data.errors) === 'undefined')) {
               // eslint-disable-next-line no-undef
               Toast.fire({
-                icon: 'success',
-                title: 'Logged In Successfully!'
+                icon: 'warning',
+                title: err.response.data.error
               });
-              this.$router.push({
-                path: this.backRoute || '/dashboard'
+            } else if (typeof (err.response) === 'undefined') {
+              return this.$nuxt.error({
+                statusCode: 503,
+                message: `Service Unavailable (${err.message || 'Network Error'})!!!`
               });
-            })
-        })
-        .catch(err => {
-          if ((typeof(err.response) !== 'undefined') && (typeof(err.response.data.errors) === 'undefined')){
-            // eslint-disable-next-line no-undef
-            Toast.fire({
-              icon: 'warning',
-              title: err.response.data.error
-            });
-          }else if (typeof(err.response) === 'undefined'){
-            return this.$nuxt.error({statusCode: 503, message: `Service Unavailable (${err.message || 'Network Error'})!!!`});
-          }
-        })
+            }
+          })
+      }
     }
   }
 }

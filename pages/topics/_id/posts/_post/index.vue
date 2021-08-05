@@ -5,11 +5,11 @@
     <form @submit.prevent="updatePost">
       <div class="form-group">
         <label><b>Body</b></label>
-        <textarea v-model="post.body" rows="7" class="form-control" placeholder="Enter Post Body"></textarea>
+        <textarea v-model="post.body" rows="10" class="form-control" placeholder="Enter Post Body"></textarea>
         <small v-if="errors.body" class="form-text text-danger">{{ errors.body[0] }}</small>
       </div>
       <button type="submit" class="btn btn-outline-info">Update</button>
-      <nuxt-link :to="{name: 'topics-id', params: {id: post.topic_id}}" class="btn btn-outline-secondary ">Back to Topic</nuxt-link>
+      <nuxt-link :to="{name: 'topics-id', params: {id: post.topic_id}}" class="btn btn-outline-warning">Back to Topic</nuxt-link>
     </form>
   </div>
 </template>

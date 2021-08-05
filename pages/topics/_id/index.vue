@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-    <div class="bg-light mt-5 mb-5" style="padding: 20px;">
-      <h3 class="display-4">{{topic.title}}</h3>
+    <div class="bg-dark mt-5 mb-5" style="padding: 20px;">
+      <h3 class="display-5">{{topic.title}}</h3>
 
       <div v-if="authenticated">
         <div v-if="user.id === topic.user.id" style="padding-bottom: 10px;">
@@ -12,7 +12,7 @@
       </div>
       <p class="text-muted" style="font-size: small;">{{topic.created_since}}&nbsp;<strong>By:</strong>&nbsp;{{topic.user.name}}</p>
       <hr>
-      <div v-for="(post, key) in topic.posts" :key="key" class="ml-5 content">
+      <div v-for="(post, key) in topic.posts" :key="key" class="ml-5 mr-5 content">
         <p>{{post.body}}</p>
         <div v-if="authenticated">
           <div v-if="user.id === post.user.id">
@@ -23,6 +23,9 @@
           </div>
         </div>
         <p class="text-muted" style="font-size: small;">{{post.created_since}}&nbsp;<strong>By:</strong>&nbsp;{{post.user.name}}</p>
+        <div :ref="'like'+post.id" class="btn fa fa-thumbs-up ml-5 " :class="post.liked_by_user ? 'btn-outline-success' : 'btn-outline-secondary'" @click="toggleLike(topic.id, post)">
+          <span :ref="'count'+post.id" class="badge">{{post.likes_count}}</span>
+        </div>
         <hr>
       </div>
     </div>
@@ -30,11 +33,11 @@
       <form @submit.prevent="createPost">
         <div class="form-group">
           <h4><b>Add New Post</b></h4>
-          <textarea v-model="body" rows="7" class="form-control" placeholder="Write Something....."></textarea>
+          <textarea v-model="body" rows="10" class="form-control" placeholder="Write Something....."></textarea>
           <small v-if="errors.body" class="form-text text-danger">{{ errors.body[0] }}</small>
         </div>
         <button type="submit" class="btn btn-outline-primary">Create Post</button>
-        <nuxt-link to="/topics" class="btn btn-outline-secondary ">Back to Topics</nuxt-link>
+        <nuxt-link to="/topics" class="btn btn-outline-warning">Back to Topics</nuxt-link>
       </form>
     </div>
   </div>
@@ -139,7 +142,40 @@ export default {
             return this.$nuxt.error({statusCode: 503, message: `Service Unavailable (${err.message || 'Network Error'})!!!`});
           }
         })
+    },
+    async toggleLike(topicId, post) {
+      return await this.$axios.$post(`/topics/${topicId}/posts/${post.id}/likes`)
+        .then(res => {
+          if (res.status) {
+            this.$refs['like'+post.id][0].className = `btn fa fa-thumbs-up ml-5 ${res.is_liked ? "btn-outline-success" : "btn-outline-secondary"}`;
+            this.$refs['count'+post.id][0].innerHTML = res.likes_count;
+          } else {
+            // eslint-disable-next-line no-undef
+            Notify('error', res.message);
+          }
+        })
+        .catch(err => {
+          if ((typeof(err.response) !== 'undefined') && (typeof(err.response.data.errors) === 'undefined')){
+            if (err.response.status === 401){
+              this.$router.push('/login');
+              // eslint-disable-next-line no-undef
+              Notify('error', "You Must Login First!");
+            }else {
+              // eslint-disable-next-line no-undef
+              Notify('error');
+            }
+          }else if (typeof(err.response) === 'undefined'){
+            return this.$nuxt.error({statusCode: 503, message: `Service Unavailable (${err.message || 'Network Error'})!!!`});
+          }
+        })
     }
   }
 }
 </script>
+
+<style scoped>
+.content{
+  border-left: 10px solid #272c31;
+  padding: 0 10px 0 10px;
+}
+</style>

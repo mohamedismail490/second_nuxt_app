@@ -21,7 +21,7 @@
           <a class="nav-link">{{ user.name }}</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link btn" @click.prevent="userLogout">Logout</a>
+          <a class="nav-link" style="cursor: pointer;" @click.prevent="userLogout">Logout</a>
         </li>
       </ul>
       <ul v-else class="navbar-nav ml-auto">

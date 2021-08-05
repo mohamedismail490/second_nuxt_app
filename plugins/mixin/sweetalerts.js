@@ -4,6 +4,7 @@ window.Swal = Swal;
 
 const Toast = Swal.mixin({
   toast: true,
+  background: "#4c525c",
   position: 'top-end',
   showConfirmButton: false,
   timer: 2000,

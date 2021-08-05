@@ -90,8 +90,12 @@ export default {
         token: {
           property: 'meta.token',
           global: true,
+          maxAge: 60 * 60
           // required: true,
           // type: 'Bearer'
+        },
+        refreshToken: {
+          maxAge: 20160 * 60
         },
         user: {
           property: 'data',
@@ -100,6 +104,11 @@ export default {
         endpoints: {
           login: {
             url: '/auth/login',
+            method: 'post',
+            propertyName: "meta.token"
+          },
+          refresh: {
+            url: '/auth/refresh',
             method: 'post',
             propertyName: "meta.token"
           },

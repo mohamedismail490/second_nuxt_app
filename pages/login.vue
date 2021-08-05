@@ -37,31 +37,39 @@ export default {
   },
   methods: {
     async userLogin() {
-      await this.$auth.loginWith("local", {
-        data: this.form
-      })
-        .then(() => {
-          // eslint-disable-next-line no-undef
-          Toast.fire({
-            icon: 'success',
-            title: 'Logged In Successfully!'
-          });
-          this.$router.push({
-            path: this.backRoute || '/dashboard'
-          });
+      if (this.authenticated) {
+        // eslint-disable-next-line no-undef
+        Toast.fire({
+          icon: 'error',
+          title: 'Already Logged in !!!'
+        });
+      }else {
+        await this.$auth.loginWith("local", {
+          data: this.form
         })
-        // eslint-disable-next-line node/handle-callback-err
-        .catch((err) => {
-          if ((typeof(err.response) !== 'undefined') && (typeof(err.response.data.errors) === 'undefined')){
+          .then(() => {
             // eslint-disable-next-line no-undef
             Toast.fire({
-              icon: 'warning',
-              title: err.response.data.error
+              icon: 'success',
+              title: 'Logged In Successfully!'
             });
-          }else if (typeof(err.response) === 'undefined'){
-            return this.$nuxt.error({statusCode: 503, message: `Service Unavailable (${err.message || 'Network Error'})!!!`});
-          }
-        })
+            this.$router.push({
+              path: this.backRoute || '/dashboard'
+            });
+          })
+          // eslint-disable-next-line node/handle-callback-err
+          .catch((err) => {
+            if ((typeof(err.response) !== 'undefined') && (typeof(err.response.data.errors) === 'undefined')){
+              // eslint-disable-next-line no-undef
+              Toast.fire({
+                icon: 'warning',
+                title: err.response.data.error
+              });
+            }else if (typeof(err.response) === 'undefined'){
+              return this.$nuxt.error({statusCode: 503, message: `Service Unavailable (${err.message || 'Network Error'})!!!`});
+            }
+          })
+      }
     }
   }
 }

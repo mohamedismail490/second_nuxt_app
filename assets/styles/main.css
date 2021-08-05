@@ -1,6 +1,62 @@
+body, input, textarea, button.page-link {
+  background-color: #272c31 !important;
+  color: white !important;
+}
+button.active {
+  background-color: #007bff !important;
+}
+p.text-muted {
+  color: #aaaeb3 !important;
+}
+div.bg-dark {
+  border-radius: 10px;
+}
+div.btn-outline-secondary {
+  color: #aaaeb3 !important;
+  border-color: #aaaeb3 !important;
+}
+div.btn-outline-secondary:hover {
+  color: #fff !important;
+  background-color: #aaaeb3 !important;
+  border-color: #aaaeb3 !important;
+}
+a {
+  color: #52b2ff;
+}
+a:hover {
+  color: #0085ff;
+}
+hr {
+  background-color: #272c31 !important;
+}
+
+.swal2-title {
+  color: white !important;
+}
+
 .fade-enter-active, .fade-leave-active {
   transition: opacity .5s;
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
 }
+.bg {
+  /* noinspection CssUnknownTarget */
+  background-image: url("/background.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-color: #272c31;
+  margin-top: -50px;
+}
+::placeholder {
+  color: white !important;
+  opacity: 0.5 !important; /* Firefox */
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: white !important;
+}
+
+
+
