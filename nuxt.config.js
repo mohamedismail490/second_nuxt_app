@@ -87,14 +87,16 @@ export default {
     // Options
     strategies: {
       local: {
+        scheme: 'refresh',
         token: {
           property: 'meta.token',
           global: true,
-          maxAge: 60 * 60
+          maxAge: 3600
           // required: true,
           // type: 'Bearer'
         },
         refreshToken: {
+          property: 'meta.token',
           maxAge: 20160 * 60
         },
         user: {
